@@ -70,6 +70,14 @@ class ActiveServicePolicy extends IBackgroundControl.Stub {
         return "true".equals(SystemProperties.get("ro.config.low_ram", "false"));
     }
     
+    /*Here is the part to be changed to allow your services and receivers to auto start on boot. shouldBlockReceiver needs to be like below 
+     * Modify it for your package name
+     * 
+     * if((pkgname !=null) && (pkgname.startsWith("com.actions")||
+     *   pkgname.startsWith("com.android") || pkgname.startsWith("your_app_package_name")))
+     *   return false;
+     *
+     */
     boolean  shouldBlock(String pkgname) {
         if(!inited ||pkgname == null )
             return false;
@@ -77,13 +85,21 @@ class ActiveServicePolicy extends IBackgroundControl.Stub {
         synchronized(mBlockRestartServices){
             found = mBlockRestartServices.contains(pkgname);
         }
-        //oh, actions, you are the king
         if((pkgname !=null) && (pkgname.startsWith("com.actions")||
             pkgname.startsWith("com.android")))
             return false;
         return found ||blockAll;
     }
     
+     /*Here is the part to be changed to allow your services and receivers to auto start on boot. shouldBlockReceiver needs to be like below 
+     * Modify it for your package name
+     * 
+     * if((pkgname !=null) && (pkgname.startsWith("com.actions")||
+     *   pkgname.startsWith("com.android") || pkgname.startsWith("your_app_package_name")))
+     *   return false;
+     *
+     */
+     //oh, actions, you are the king
      boolean  shouldBlockReceiver(String pkgname) {
          if(!inited||pkgname == null)
             return false;
